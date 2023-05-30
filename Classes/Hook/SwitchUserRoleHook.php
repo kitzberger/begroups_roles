@@ -27,10 +27,12 @@ namespace IchHabRecht\BegroupsRoles\Hook;
 
 use Doctrine\DBAL\Connection;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -109,6 +111,23 @@ class SwitchUserRoleHook
         }
         if (in_array($role, $possibleUsergroups, true)) {
             $this->backendUser->user[$this->backendUser->usergroup_column] = $role;
+            $typo3Version = class_exists(\TYPO3\CMS\Core\Information\Typo3Version::class)
+                ? (new Typo3Version())->getVersion()
+                : TYPO3_version;
+            if (version_compare($typo3Version, '11.5', '>=')) {
+                $groupResolver = GeneralUtility::makeInstance(GroupResolver::class);
+                $groups = $groupResolver->resolveGroupsForUser($this->backendUser->user, $this->backendUser->usergroup_table);
+                $dbMountPoints = [];
+                $fileMountPoints = [];
+                $this->backendUser->userGroupsUID = [];
+                foreach ($groups as $group) {
+                    $this->backendUser->userGroupsUID[] = $group['uid'];
+                    $dbMountPoints = array_merge($dbMountPoints, GeneralUtility::intExplode(',', $group['db_mountpoints'], true));
+                    $fileMountPoints = array_merge($fileMountPoints, GeneralUtility::intExplode(',', $group['file_mountpoints'], true));
+                }
+                $this->backendUser->user['db_mountpoints'] = implode(',', array_unique($dbMountPoints));
+                $this->backendUser->user['file_mountpoints'] = implode(',', array_unique($fileMountPoints));
+            }
             if (!empty($this->backendUser->user['admin'])) {
                 $this->backendUser->user['options'] |= Permission::PAGE_SHOW | Permission::PAGE_EDIT;
                 $this->backendUser->user['admin'] = 0;

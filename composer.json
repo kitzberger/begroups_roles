@@ -15,6 +15,11 @@
             "name": "Nicole Cordes",
             "email": "typo3@cordes.co",
             "role": "Developer"
+        },
+        {
+            "name": "Xavier Perseguers",
+            "email": "xavier@causal.ch",
+            "role": "Developer"
         }
     ],
     "require": {
