@@ -84,7 +84,7 @@ class SwitchUserRoleHook
                 ->execute();
         }
 
-        $possibleUsergroups = GeneralUtility::intExplode(',', $this->backendUser->user['tx_begroupsroles_groups'], true);
+        $possibleUsergroups = GeneralUtility::intExplode(',', $this->backendUser->user['tx_begroupsroles_groups'] ?? '', true);
         if (empty($role) && !empty($this->backendUser->user['tx_begroupsroles_limit'])) {
             $queryBuilder = $this->connection->createQueryBuilder();
             $expressionBuilder = $queryBuilder->expr();
@@ -122,8 +122,8 @@ class SwitchUserRoleHook
                 $this->backendUser->userGroupsUID = [];
                 foreach ($groups as $group) {
                     $this->backendUser->userGroupsUID[] = $group['uid'];
-                    $dbMountPoints = array_merge($dbMountPoints, GeneralUtility::intExplode(',', $group['db_mountpoints'], true));
-                    $fileMountPoints = array_merge($fileMountPoints, GeneralUtility::intExplode(',', $group['file_mountpoints'], true));
+                    $dbMountPoints = array_merge($dbMountPoints, GeneralUtility::intExplode(',', $group['db_mountpoints'] ?? '', true));
+                    $fileMountPoints = array_merge($fileMountPoints, GeneralUtility::intExplode(',', $group['file_mountpoints'] ?? '', true));
                 }
                 $this->backendUser->user['db_mountpoints'] = implode(',', array_unique($dbMountPoints));
                 $this->backendUser->user['file_mountpoints'] = implode(',', array_unique($fileMountPoints));
