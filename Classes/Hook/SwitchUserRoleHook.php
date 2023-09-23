@@ -122,8 +122,8 @@ class SwitchUserRoleHook
                 $this->backendUser->userGroupsUID = [];
                 foreach ($groups as $group) {
                     $this->backendUser->userGroupsUID[] = $group['uid'];
-                    $dbMountPoints = array_merge($dbMountPoints, GeneralUtility::intExplode(',', $group['db_mountpoints'], true));
-                    $fileMountPoints = array_merge($fileMountPoints, GeneralUtility::intExplode(',', $group['file_mountpoints'], true));
+                    $dbMountPoints = array_merge($dbMountPoints, GeneralUtility::intExplode(',', $group['db_mountpoints'] ?? '', true));
+                    $fileMountPoints = array_merge($fileMountPoints, GeneralUtility::intExplode(',', $group['file_mountpoints'] ?? '', true));
                 }
                 $this->backendUser->user['db_mountpoints'] = implode(',', array_unique($dbMountPoints));
                 $this->backendUser->user['file_mountpoints'] = implode(',', array_unique($fileMountPoints));
