@@ -28,10 +28,11 @@ namespace IchHabRecht\BegroupsRoles\Backend\ToolbarItems;
 use Doctrine\DBAL\Connection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Http\NullResponse;
+use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -69,6 +70,11 @@ class RoleSwitcher implements ToolbarItemInterface
     protected $pageRenderer;
 
     /**
+     * @var UriBuilder
+     */
+    protected $uriBuilder;
+
+    /**
      * @var array
      */
     protected $groups = [];
@@ -83,13 +89,15 @@ class RoleSwitcher implements ToolbarItemInterface
         Connection $connection = null,
         IconFactory $iconFactory = null,
         $languageService = null,
-        PageRenderer $pageRenderer = null
+        PageRenderer $pageRenderer = null,
+        UriBuilder $uriBuilder = null
     ) {
         $this->backendUser = $backendUser ?: $GLOBALS['BE_USER'];
         $this->connection = $connection ?: GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->backendUser->user_table);
         $this->iconFactory = $iconFactory ?: GeneralUtility::makeInstance(IconFactory::class);
         $this->languageService = $languageService ?: $GLOBALS['LANG'];
         $this->pageRenderer = $pageRenderer ?: GeneralUtility::makeInstance(PageRenderer::class);
+        $this->uriBuilder = $uriBuilder ?: GeneralUtility::makeInstance(UriBuilder::class);
     }
 
     /**
@@ -229,6 +237,8 @@ class RoleSwitcher implements ToolbarItemInterface
 
         $this->backendUser->setAndSaveSessionData('tx_begroupsroles_role', $newRole);
 
-        return new NullResponse();
+        return new JsonResponse([
+            'redirectUrl' => (string)$this->uriBuilder->buildUriFromRoute('main'),
+        ]);
     }
 }

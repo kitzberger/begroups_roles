@@ -37,8 +37,9 @@ define(['jquery'], function($) {
 				data: {
 					role: $(this).data('role')
 				},
-				complete: function() {
-					document.location.reload();
+				dataType: 'json',
+				success: function(data) {
+					document.location.assign(data.redirectUrl);
 				}
 			});
 		})
