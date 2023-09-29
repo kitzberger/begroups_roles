@@ -121,7 +121,7 @@ class RoleSwitcher implements ToolbarItemInterface
                 $expressionBuilder->in(
                     'uid',
                     $queryBuilder->createNamedParameter(
-                        GeneralUtility::intExplode(',', $this->backendUser->user['tx_begroupsroles_groups'], true),
+                        GeneralUtility::intExplode(',', $this->backendUser->user['tx_begroupsroles_groups'] ?? '', true),
                         Connection::PARAM_INT_ARRAY
                     )
                 ),

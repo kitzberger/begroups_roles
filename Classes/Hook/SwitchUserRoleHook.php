@@ -84,7 +84,7 @@ class SwitchUserRoleHook
                 ->execute();
         }
 
-        $possibleUsergroups = GeneralUtility::intExplode(',', $this->backendUser->user['tx_begroupsroles_groups'], true);
+        $possibleUsergroups = GeneralUtility::intExplode(',', $this->backendUser->user['tx_begroupsroles_groups'] ?? '', true);
         if (empty($role) && !empty($this->backendUser->user['tx_begroupsroles_limit'])) {
             $queryBuilder = $this->connection->createQueryBuilder();
             $expressionBuilder = $queryBuilder->expr();
