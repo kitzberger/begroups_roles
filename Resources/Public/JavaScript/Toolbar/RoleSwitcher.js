@@ -25,7 +25,7 @@
 /**
  * Module: TYPO3/CMS/BegroupsRoles/Toolbar/RoleSwitcher
  */
-define(['jquery'], function($) {
+define(['jquery', 'TYPO3/CMS/Backend/Storage/ModuleStateStorage'], function($) {
 	'use strict';
 
 	$(
@@ -37,8 +37,13 @@ define(['jquery'], function($) {
 				data: {
 					role: $(this).data('role')
 				},
-				complete: function() {
-					document.location.reload();
+				dataType: 'json',
+				success: function(data) {
+					// Reset currently selected pid in pagetree
+					ModuleStateStorage.update('web', 0, true, 0);
+
+					// Redirecting to main route
+					document.location.assign(data.redirectUrl);
 				}
 			});
 		})
