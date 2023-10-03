@@ -2,6 +2,7 @@
 # Table structure for table 'be_users'
 #
 CREATE TABLE be_groups (
+    lockToDomain varchar(50) DEFAULT '' NOT NULL,
     tx_begroupsroles_isrole tinyint(4) UNSIGNED DEFAULT '0' NOT NULL
 );
 
