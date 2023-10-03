@@ -20,6 +20,11 @@
             "name": "Xavier Perseguers",
             "email": "xavier@causal.ch",
             "role": "Developer"
+        },
+        {
+            "name": "Philipp Kitzberger",
+            "email": "typo3@kitze.net",
+            "role": "Developer"
         }
     ],
     "require": {
