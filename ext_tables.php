@@ -5,6 +5,10 @@ call_user_func(function () {
     $GLOBALS['TYPO3_CONF_VARS']['BE']['toolbarItems'][1472569541] =
         \IchHabRecht\BegroupsRoles\Backend\ToolbarItems\RoleSwitcher::class;
 
+    // Flip order of RoleSwitch and UserToolbarItem
+    $GLOBALS['TYPO3_CONF_VARS']['BE']['toolbarItems'][1472569542] = $GLOBALS['TYPO3_CONF_VARS']['BE']['toolbarItems'][1435433111];
+    unset($GLOBALS['TYPO3_CONF_VARS']['BE']['toolbarItems'][1435433111]);
+
     // Register hook to adjust current user group
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_userauth.php']['postUserLookUp']['begroups_roles'] =
         \IchHabRecht\BegroupsRoles\Hook\SwitchUserRoleHook::class . '->setUserGroup';
